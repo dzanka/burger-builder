@@ -1,4 +1,3 @@
-import { checkPropTypes } from 'prop-types';
 import React from 'react';
 import styles from './NavigationItem.module.css';
 
