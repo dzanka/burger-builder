@@ -19,7 +19,7 @@ const INGREDIENT_PRICES = {
 class BurgerBuilder extends Component{
     state = {
         ingredients: null,
-        totalPrice: 0,
+        totalPrice: 4,
         purchaseable: false,
         purchasing: false,
         loading: false,
@@ -27,9 +27,8 @@ class BurgerBuilder extends Component{
 }
 
 componentDidMount() {
-    axios.get('https://burgerbuilder-ddfaa.firebaseio.com/ingredients.json')
-        .then(response => {
-            console.log(response.data);            
+    axios.get('ingredients.json')
+        .then(response => {          
             this.setState({ingredients: response.data});
         })
         .catch(error => {
@@ -81,7 +80,6 @@ purchaseCancelHandler = () => {
 }
 
 purchaseContinueHandler = () => {
-    // alert('Continue Ordering');
     this.setState({loading: true});
     const order = {
         ingredients: this.state.ingredients,
@@ -98,12 +96,12 @@ purchaseContinueHandler = () => {
         deliveryMethod: 'fastest',
         paymentMethod: 'cash'
     } //price by bolo fajn vyratat na serveri
-    axios.post('/orders.json', order)
-    .then(
-        response => {
+    axios.post('/orders', order)
+    .then( response => {
             this.setState({loading: false, purchasing: false});
         })
     .catch(error => {
+        //console.log('ERROR');
         this.setState({loading: false, purchasing: false});
     });
 }
@@ -120,6 +118,7 @@ purchaseContinueHandler = () => {
         let orderSummary = null;
 
         let burger =  this.state.error ? <p>Ingredients can't be loaded.</p> : <Spinner />
+        //let burger = <Spinner />
         if (this.state.ingredients){
             burger = (
                 <Aux>
@@ -156,3 +155,4 @@ purchaseContinueHandler = () => {
 }
 
 export default withErrorHandler(BurgerBuilder, axios);
+//export default BurgerBuilder;
