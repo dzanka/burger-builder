@@ -80,30 +80,17 @@ purchaseCancelHandler = () => {
 }
 
 purchaseContinueHandler = () => {
-    // alert('Continue Ordering');
-    this.setState({loading: true});
-    const order = {
-        ingredients: this.state.ingredients,
-        price: this.state.totalPrice,
-        customer: {
-            name: 'Jan',
-            address: {
-                street: 'Hlavna 1',
-                zipCode: '00000',
-                country: 'Slovakia'
-            },
-            email: 'test@test.sk'
-        },
-        deliveryMethod: 'fastest',
-        paymentMethod: 'cash'
-    } //price by bolo fajn vyratat na serveri
-    axios.post('/orders.json', order)
-    .then(
-        response => {
-            this.setState({loading: false, purchasing: false});
-        })
-    .catch(error => {
-        this.setState({loading: false, purchasing: false});
+    const queryParams = [];
+    for (let i in this.state.ingredients){
+        queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+    }
+
+    queryParams.push('price='+this.state.totalPrice);
+    const queryString = queryParams.join('&');
+
+    this.props.history.push({
+        pathname: '/checkout',
+        search:'?' + queryString
     });
 }
 
