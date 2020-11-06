@@ -8,13 +8,6 @@
     box-sizing: border-box;
 }
 
-.Input {
-    display: block;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 3px #ccc;
-    margin: 10px;
-}
-
 @media (min-width: 600px) {
     .ContactData {
         width: 500px
