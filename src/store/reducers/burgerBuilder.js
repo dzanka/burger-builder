@@ -1,4 +1,6 @@
 import * as actionTypes from '../actions/actionTypes';
+//da sa to spravit aj prehladnejsie, kuk video 318, alebo redux project
+//import {  updatedObject } from '../utility';
 
 const initialState = {
     ingredients: null,
