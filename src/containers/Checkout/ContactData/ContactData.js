@@ -72,13 +72,13 @@ class ContactData extends Component {
             email: {
                 elementType:'input',
                 elementConfig: {
-                    type:'text',
+                    type:'email',
                     placeholder: 'Your E-mail'
                 },
                 value: '',
                 validation: {
                     required: false,
-                    errorMessage: 'This field is required.'
+                    errorMessage: 'This field is required with email format.'
                 },
                 valid: false,
                 touched: false
@@ -118,16 +118,7 @@ class ContactData extends Component {
         } 
         this.props.onOrderBurger(orderData);
         //price by bolo fajn vyratat na serveri
-        // axios.post('/orders.json', order)
-        // .then(
-        //     response => {
-        //         this.setState({loading: false});
-        //         this.props.history.push('/');
-        //         console.log('order succesfull');
-        //     })
-        // .catch(error => {
-        //     this.setState({loading: false});
-        // });
+
     }
 
     checkValidty(value, rules){
@@ -143,6 +134,16 @@ class ContactData extends Component {
 
         if ((rules.maxLength) && isValid){
             isValid = value.length <= rules.maxLength;
+        }
+
+        if (rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value) && isValid
+        }
+
+        if (rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
         }
 
         return isValid;
