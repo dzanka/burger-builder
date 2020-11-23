@@ -114,7 +114,8 @@ class ContactData extends Component {
             ingredients: this.props.ings,
             price: this.props.price,
             paymentMethod: 'cash',
-            orderData : formData
+            orderData : formData,
+            userId: this.props.userId
         } 
         this.props.onOrderBurger(orderData, this.props.token);
         //price by bolo fajn vyratat na serveri
@@ -216,7 +217,8 @@ const mapStateToProps = state => {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 

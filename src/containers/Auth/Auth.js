@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
@@ -41,7 +42,16 @@ class Auth extends Component {
                 touched: false
             },
         },
-        isRegistration: true
+        isRegistration: false
+    }
+
+    componentDidMount(){
+        //console.log(this.props);
+        if (!this.props.buildingBurger && (this.props.authRedirectPath !== '/')){
+            //console.log('redirect homepage');
+            this.props.onSetAuthRedirectPath();
+        }
+
     }
 
     checkValidity(value, rules){
@@ -131,8 +141,15 @@ class Auth extends Component {
             );
         }
 
+        let authRedirect = null;
+        //console.log(this.props.authRedirectPath);
+        if (this.props.isAuth){
+            authRedirect = <Redirect to={this.props.authRedirectPath} />
+        }
+
         return (
             <div className={styles.Auth}> 
+                {authRedirect}
                 {errorMessage}
                 <form onSubmit = {this.submitHandler}>
                     {form}
@@ -149,13 +166,17 @@ class Auth extends Component {
 const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        isAuth: state.auth.token !== null,
+        buildingBurger: state.burgerBuilder.building,
+        authRedirectPath: state.auth.authRedirectPath
     };
 };
 
 const mapDispatchToProps = dispatch =>{
     return {
-        onAuth: (email, password, isRegistration) => dispatch(actions.auth(email, password, isRegistration))
+        onAuth: (email, password, isRegistration) => dispatch(actions.auth(email, password, isRegistration)),
+        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
     };
 };
 
