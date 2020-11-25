@@ -7,6 +7,7 @@ import Button from '../../components/UI/Button/Button';
 import styles from './Auth.module.css';
 import * as actions from '../../store/actions/auth';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import {updateObject, checkValidity} from '../../shared/utility';
 
 class Auth extends Component {
     state = {
@@ -46,54 +47,22 @@ class Auth extends Component {
     }
 
     componentDidMount(){
-        //console.log(this.props);
         if (!this.props.buildingBurger && (this.props.authRedirectPath !== '/')){
-            //console.log('redirect homepage');
             this.props.onSetAuthRedirectPath();
         }
 
     }
 
-    checkValidity(value, rules){
-        let isValid  = true;
-
-        if ((rules.required) && isValid){
-            isValid = value.trim() !== '';
-        }
-
-        if ((rules.minLength) && isValid){
-            isValid = value.length >= rules.minLength;
-        }
-
-        if ((rules.maxLength) && isValid){
-            isValid = value.length <= rules.maxLength;
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&A-Z'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
-    }
-
     inputChangedHandler = (event, controlName) => {
-        const updatedForm = {
-            ...this.state.controls,
-            [controlName]: {
-                ...this.state.controls[controlName],
+        const updatedControls = updateObject(this.state.controls, {
+            [controlName]: updateObject(this.state.controls[controlName],{
                 value: event.target.value,
-                valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+                valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
                 touched: true
-            }
-        };
-
-        this.setState({controls: updatedForm});
+            })
+        });
+       
+        this.setState({controls: updatedControls});
     };
 
     submitHandler = (event) =>{
@@ -142,7 +111,6 @@ class Auth extends Component {
         }
 
         let authRedirect = null;
-        //console.log(this.props.authRedirectPath);
         if (this.props.isAuth){
             authRedirect = <Redirect to={this.props.authRedirectPath} />
         }

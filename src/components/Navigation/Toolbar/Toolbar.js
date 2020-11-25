@@ -7,7 +7,7 @@ import Logo from '../../Logo/Logo';
 
 const toolbar = (props) => (
     <header className={styles.Toolbar}>
-        <DrawerToggle clicked={props.clicked} />
+        <DrawerToggle clicked={props.drawerToggleClicked} />
         <div className={styles.Logo}>
             <Logo />
         </div>

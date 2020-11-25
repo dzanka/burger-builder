@@ -7,6 +7,7 @@ import Input from '../../../components/UI/Input/Input';
 import axios from '../../../axios-orders';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
+import {updateObject, checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
     state = {
@@ -78,7 +79,8 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: false,
-                    errorMessage: 'This field is required with email format.'
+                    errorMessage: 'This field is required. Format: something@domain.com',
+                    isEmail: true
                 },
                 valid: false,
                 touched: false
@@ -122,47 +124,18 @@ class ContactData extends Component {
 
     }
 
-    checkValidty(value, rules){
-        let isValid  = true;
-
-        if ((rules.required) && isValid){
-            isValid = value.trim() !== '';
-        }
-
-        if ((rules.minLength) && isValid){
-            isValid = value.length >= rules.minLength;
-        }
-
-        if ((rules.maxLength) && isValid){
-            isValid = value.length <= rules.maxLength;
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
-    }
-
     inputChangedHandler = (event, id) => {
-        const updatedOrderForm = {
-            ...this.state.orderForm
-        };
 
-        const updatedFormElement = {
-            ...updatedOrderForm[id]
-        };
+        const updatedFormElement = updateObject(this.state.orderForm[id], {
+            value: event.target.value,
+            valid: checkValidity(event.target.value, this.state.orderForm[id].validation),
+            touched: true
+        });
 
-        updatedFormElement.value = event.target.value;
-        updatedFormElement.valid = this.checkValidty(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.touched = true;
-        updatedOrderForm[id] = updatedFormElement;
+        const updatedOrderForm = updateObject(this.state.orderForm, {
+            [id]: updatedFormElement
+        });
+        // /updatedFormElement;
 
         let formIsValid = true;
 
@@ -182,7 +155,6 @@ class ContactData extends Component {
             });
         }
 
-        //console.log(formElementsArray);
         let form = (
             <form onSubmit={this.orderHandler}>
                 {formElementsArray.map(formElement => (

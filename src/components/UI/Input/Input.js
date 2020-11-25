@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './Input.module.css';
 
 const input = (props) => {
-    //console.log(props);
     let inputElement = null;
     let validationError = null;
     const inputStyles = [styles.InputElement];
