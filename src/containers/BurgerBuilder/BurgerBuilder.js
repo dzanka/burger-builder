@@ -13,7 +13,7 @@ import axios from '../../axios-orders';
 import * as actions from '../../store/actions/index';
 //import burger from '../../components/Burger/Burger';
 
-class BurgerBuilder extends Component{
+export class BurgerBuilder extends Component{
     state = {
         //ingredients: null,
         //totalPrice: 4,
@@ -106,10 +106,6 @@ purchaseContinueHandler = () => {
                 purchaseCancelled={this.purchaseCancelHandler}
                 price={this.props.price} />
         }
-
-        // if (this.state.loading) {
-        //     orderSummary = <Spinner />
-        // }
 
         return (
             <Aux>
